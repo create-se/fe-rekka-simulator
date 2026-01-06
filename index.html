@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FE烈火の剣 ボスラッシュシミュレーター</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&family=Orbitron:wght@700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- ヘッダー -->
+        <header class="header">
+            <h1 class="title">
+                <span class="title-sub">FE烈火の剣</span>
+                <span class="title-main">ボスラッシュシミュレーター</span>
+            </h1>
+            <p class="subtitle">あなたのユニットは何人のボスを倒せるか？</p>
+        </header>
+
+        <!-- メインコンテンツ -->
+        <main class="main">
+            <!-- 左：ユニット入力パネル -->
+            <section class="panel input-panel">
+                <h2 class="panel-title">
+                    <span class="icon">⚔️</span>
+                    ユニットステータス
+                </h2>
+                
+                <div class="form-group">
+                    <label for="unitName">ユニット名</label>
+                    <select id="unitName">
+                        <!-- JavaScriptで動的に生成 -->
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="unitClass">クラス（上級）</label>
+                    <select id="unitClass" disabled>
+                        <!-- ユニット選択で自動設定 -->
+                    </select>
+                </div>
+
+                <!-- レベル入力エリア -->
+                <div class="level-input-area">
+                    <div class="form-group level-group">
+                        <label for="unitLevel">レベル</label>
+                        <input type="number" id="unitLevel" value="20" min="1" max="20">
+                    </div>
+                    <div class="form-group cc-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="isClassChanged" checked>
+                            <span>CC済み</span>
+                        </label>
+                    </div>
+                    <button id="calcStats" class="btn-calc" title="ステータス期待値を計算">
+                        📊 期待値計算
+                    </button>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-input">
+                        <label for="hp">HP</label>
+                        <input type="number" id="hp" value="30" min="1" max="80">
+                    </div>
+                    <div class="stat-input">
+                        <label for="str">力</label>
+                        <input type="number" id="str" value="12" min="0" max="30">
+                    </div>
+                    <div class="stat-input">
+                        <label for="skl">技</label>
+                        <input type="number" id="skl" value="14" min="0" max="30">
+                    </div>
+                    <div class="stat-input">
+                        <label for="spd">速さ</label>
+                        <input type="number" id="spd" value="15" min="0" max="30">
+                    </div>
+                    <div class="stat-input">
+                        <label for="lck">幸運</label>
+                        <input type="number" id="lck" value="10" min="0" max="30">
+                    </div>
+                    <div class="stat-input">
+                        <label for="def">守備</label>
+                        <input type="number" id="def" value="8" min="0" max="30">
+                    </div>
+                    <div class="stat-input">
+                        <label for="res">魔防</label>
+                        <input type="number" id="res" value="6" min="0" max="30">
+                    </div>
+                    <div class="stat-input">
+                        <label for="con">体格</label>
+                        <input type="number" id="con" value="5" min="1" max="20">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="weapon">装備武器</label>
+                    <select id="weapon">
+                        <!-- JavaScriptで動的に生成 -->
+                    </select>
+                </div>
+
+                <!-- モード選択 -->
+                <div class="mode-selector">
+                    <div class="mode-tabs">
+                        <button id="modeRush" class="mode-tab active" data-mode="rush">
+                            ⚔️ ボスラッシュ
+                        </button>
+                        <button id="mode100" class="mode-tab" data-mode="100battle">
+                            🎯 100連戦
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 難易度選択 -->
+                <div class="form-group">
+                    <label for="difficulty">難易度</label>
+                    <select id="difficulty">
+                        <option value="eliwood_normal">エリウッド編 ノーマル</option>
+                        <option value="hector_hard">ヘクトル編 ハード</option>
+                    </select>
+                </div>
+
+                <!-- 100連戦用：敵選択 -->
+                <div id="enemySelectArea" class="form-group hidden">
+                    <label for="targetEnemy">対戦相手を選択</label>
+                    <select id="targetEnemy">
+                        <!-- JavaScriptで動的に生成 -->
+                    </select>
+                </div>
+
+                <button id="startBattle" class="btn-primary">
+                    <span class="btn-icon">⚔️</span>
+                    <span id="battleBtnText">ボスラッシュ開始！</span>
+                </button>
+            </section>
+
+            <!-- 右：結果パネル -->
+            <section class="panel result-panel">
+                <h2 class="panel-title">
+                    <span class="icon">📊</span>
+                    戦闘結果
+                </h2>
+
+                <!-- ボスラッシュ用サマリー -->
+                <div id="resultSummary" class="result-summary hidden">
+                    <div class="summary-card">
+                        <span class="summary-label">撃破数</span>
+                        <span id="defeatedCount" class="summary-value">0</span>
+                        <span class="summary-unit">/ <span id="totalBosses">0</span></span>
+                    </div>
+                    <div class="summary-card">
+                        <span class="summary-label">評価</span>
+                        <span id="rank" class="summary-rank">-</span>
+                    </div>
+                </div>
+
+                <!-- 100連戦用サマリー -->
+                <div id="result100Summary" class="result-100-summary hidden">
+                    <div class="result-100-header">
+                        <span id="targetEnemyName" class="enemy-name">-</span>
+                        <span class="vs-text">との100連戦</span>
+                    </div>
+                    <div class="result-100-stats">
+                        <div class="stat-box win">
+                            <span class="stat-label">勝利</span>
+                            <span id="winCount" class="stat-value">0</span>
+                            <span class="stat-unit">勝</span>
+                        </div>
+                        <div class="stat-box lose">
+                            <span class="stat-label">敗北</span>
+                            <span id="loseCount" class="stat-value">0</span>
+                            <span class="stat-unit">敗</span>
+                        </div>
+                    </div>
+                    <div class="win-rate-bar">
+                        <div id="winRateBar" class="win-rate-fill" style="width: 0%"></div>
+                    </div>
+                    <div class="win-rate-text">
+                        勝率: <span id="winRate">0</span>%
+                    </div>
+                    <div class="result-100-detail">
+                        <div class="detail-row">
+                            <span>平均勝利時残HP:</span>
+                            <span id="avgWinHP">-</span>
+                        </div>
+                        <div class="detail-row">
+                            <span>平均ラウンド数:</span>
+                            <span id="avgRounds">-</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="battleLog" class="battle-log">
+                    <div class="placeholder">
+                        <p>👆 ユニットのステータスを入力して</p>
+                        <p>「ボスラッシュ開始」を押してください</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- フッター -->
+        <footer class="footer">
+            <p>※このツールは非公式のファンメイドツールです</p>
+            <p>データは攻略サイトを参考に作成しています</p>
+        </footer>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="data/weapons.js"></script>
+    <script src="data/bosses.js"></script>
+    <script src="data/classes.js"></script>
+    <script src="data/units.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
+
