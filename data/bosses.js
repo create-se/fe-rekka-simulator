@@ -431,7 +431,7 @@ const BOSSES = [
         className: "火竜",
         difficulty: "eliwood_normal",
         stats: { hp: 120, str: 25, skl: 18, spd: 10, lck: 8, def: 22, res: 28, con: 25 },
-        weapon: { id: "flametongue", name: "火のブレス", type: "dragon", might: 18, weight: 0, hit: 90, crit: 0 },
+        weapon: { id: "flametongue", name: "火のブレス", type: "dragon", might: 37, weight: 0, hit: 180, crit: 0, fixedDamage: true, range: [1, 2, 3] },
         description: "ネルガルが呼び出した火竜。烈火の剣の最後の敵。"
     },
 
@@ -765,7 +765,7 @@ const BOSSES = [
         className: "火竜",
         difficulty: "hector_hard",
         stats: { hp: 150, str: 32, skl: 24, spd: 14, lck: 12, def: 28, res: 35, con: 25 },
-        weapon: { id: "flametongue", name: "火のブレス", type: "dragon", might: 18, weight: 0, hit: 90, crit: 0 },
+        weapon: { id: "flametongue", name: "火のブレス", type: "dragon", might: 37, weight: 0, hit: 180, crit: 0, fixedDamage: true, range: [1, 2, 3] },
         description: "ネルガルが呼び出した火竜。烈火の剣の最後の敵。"
     }
 ];

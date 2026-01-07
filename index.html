@@ -114,6 +114,21 @@
                     </div>
                 </div>
 
+                <!-- HP回復オプション（ボスラッシュ用） -->
+                <div id="hpRecoveryOption" class="form-group hp-recovery-option">
+                    <label>HP回復</label>
+                    <div class="radio-group">
+                        <label class="radio-label">
+                            <input type="radio" name="hpRecovery" value="none" checked>
+                            <span>引き継ぎ</span>
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="hpRecovery" value="full">
+                            <span>毎回全回復</span>
+                        </label>
+                    </div>
+                </div>
+
                 <!-- 難易度選択 -->
                 <div class="form-group">
                     <label for="difficulty">難易度</label>
@@ -189,6 +204,63 @@
                         <div class="detail-row">
                             <span>平均ラウンド数:</span>
                             <span id="avgRounds">-</span>
+                        </div>
+                    </div>
+                    
+                    <!-- 戦闘統計 -->
+                    <div class="battle-stats-100">
+                        <div class="stats-section player-stats">
+                            <div class="stats-header">
+                                <span>📊 自分の攻撃</span>
+                                <span id="effectiveStatus"></span>
+                            </div>
+                            <div class="stats-grid">
+                                <div class="stat-item">
+                                    <span class="stat-name">与ダメージ</span>
+                                    <span id="playerDamage" class="stat-val">-</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-name">命中率</span>
+                                    <span id="playerHit" class="stat-val">-</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-name">必殺率</span>
+                                    <span id="playerCrit" class="stat-val">-</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-name">追撃</span>
+                                    <span id="playerDouble" class="stat-val">-</span>
+                                </div>
+                                <div class="stat-item crit-count">
+                                    <span class="stat-name">💥必殺発生</span>
+                                    <span id="playerCritCount" class="stat-val crit-val">0</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="stats-section boss-stats">
+                            <div class="stats-header">⚔️ 敵の攻撃</div>
+                            <div class="stats-grid">
+                                <div class="stat-item">
+                                    <span class="stat-name">被ダメージ</span>
+                                    <span id="bossDamage" class="stat-val">-</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-name">命中率</span>
+                                    <span id="bossHit" class="stat-val">-</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-name">必殺率</span>
+                                    <span id="bossCrit" class="stat-val">-</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-name">追撃</span>
+                                    <span id="bossDouble" class="stat-val">-</span>
+                                </div>
+                                <div class="stat-item crit-count">
+                                    <span class="stat-name">💢必殺発生</span>
+                                    <span id="bossCritCount" class="stat-val crit-val">0</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

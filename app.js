@@ -236,6 +236,10 @@ function onModeChange(mode) {
     const enemyArea = document.getElementById('enemySelectArea');
     enemyArea.classList.toggle('hidden', mode !== '100battle');
     
+    // HP回復オプションの表示切替（ボスラッシュのみ表示）
+    const hpRecoveryOption = document.getElementById('hpRecoveryOption');
+    hpRecoveryOption.classList.toggle('hidden', mode !== 'rush');
+    
     // ボタンテキストの変更
     const btnText = document.getElementById('battleBtnText');
     btnText.textContent = mode === 'rush' ? 'ボスラッシュ開始！' : '100連戦開始！';
@@ -284,6 +288,42 @@ function onStartBattle() {
 // ===================================
 
 /**
+ * 特効判定
+ * @param {Object} weapon - 武器データ
+ * @param {string} targetClassId - 対象のクラスID
+ * @returns {boolean} 特効が有効かどうか
+ */
+function isEffective(weapon, targetClassId) {
+    if (!weapon.effective || !targetClassId) {
+        return false;
+    }
+    
+    for (const effectType of weapon.effective) {
+        switch (effectType) {
+            case 'armor':
+                if (isArmored(targetClassId)) return true;
+                break;
+            case 'cavalry':
+                if (isCavalry(targetClassId)) return true;
+                break;
+            case 'flying':
+                if (isFlying(targetClassId)) return true;
+                break;
+            case 'dragon':
+                // ドラゴン系クラス（火竜など）
+                if (['firedragon', 'wyvern', 'wyvernlord'].includes(targetClassId)) return true;
+                break;
+            case 'monster':
+                // モンスター系（烈火では火竜のみ）
+                if (targetClassId === 'firedragon') return true;
+                break;
+        }
+    }
+    
+    return false;
+}
+
+/**
  * 戦闘統計を計算する
  * @param {Object} unit - ユニットデータ
  * @param {Object} weapon - 武器データ
@@ -295,6 +335,7 @@ function calculateBattleStats(unit, weapon, target, classId) {
     const stats = unit.stats || unit;
     const targetStats = target.stats || target;
     const targetWeapon = target.weapon || {};
+    const targetClassId = target.classId || null;
     
     // 攻速計算
     const weightPenalty = Math.max(0, weapon.weight - stats.con);
@@ -303,13 +344,25 @@ function calculateBattleStats(unit, weapon, target, classId) {
     // 武器相性
     const triangleBonus = getWeaponTriangleBonus(weapon.type, targetWeapon.type);
     
+    // 特効判定（威力3倍）
+    const hasEffective = isEffective(weapon, targetClassId);
+    const effectiveMight = hasEffective ? weapon.might * 3 : weapon.might;
+    
     // 攻撃力計算（魔法か物理か判定）
     const isMagic = ['anima', 'light', 'dark'].includes(weapon.type);
-    const baseDamage = (isMagic ? stats.str : stats.str) + weapon.might + triangleBonus.might;
     
-    // 守備か魔防で軽減
-    const targetDef = isMagic ? targetStats.res : targetStats.def;
-    const damage = Math.max(0, baseDamage - targetDef);
+    // 固定ダメージ武器の判定（火竜のブレスなど）
+    let damage;
+    if (weapon.fixedDamage) {
+        // 固定ダメージ武器は守備・魔防を無視
+        damage = weapon.might;
+    } else {
+        const baseDamage = stats.str + effectiveMight + triangleBonus.might;
+        
+        // 守備か魔防で軽減
+        const targetDef = isMagic ? targetStats.res : targetStats.def;
+        damage = Math.max(0, baseDamage - targetDef);
+    }
     
     // 命中率計算
     const hitRate = weapon.hit + (stats.skl * 2) + Math.floor(stats.lck / 2) + triangleBonus.hit;
@@ -338,7 +391,8 @@ function calculateBattleStats(unit, weapon, target, classId) {
         attackSpeed,
         canDouble,
         isMagic,
-        triangleBonus: triangleBonus.advantage
+        triangleBonus: triangleBonus.advantage,
+        hasEffective
     };
 }
 
@@ -431,12 +485,18 @@ function simulateBattle(playerStats, boss, playerHP) {
         }
     }
     
+    // 必殺発生回数をカウント
+    const playerCrits = log.filter(entry => entry.attacker === 'player' && entry.crit).length;
+    const bossCrits = log.filter(entry => entry.attacker === 'boss' && entry.crit).length;
+    
     return {
         win: currentHP > 0,
         playerHP: Math.max(0, currentHP),
         bossHP: Math.max(0, bossCurrentHP),
         rounds: round,
-        log
+        log,
+        playerCrits,
+        bossCrits
     };
 }
 
@@ -518,12 +578,21 @@ function startBossRush() {
     // 難易度に応じたボスリストを取得
     const bosses = getCurrentDifficultyBosses();
     
+    // HP回復オプションを取得
+    const hpRecovery = document.querySelector('input[name="hpRecovery"]:checked').value;
+    const fullRecovery = (hpRecovery === 'full');
+    
     // ボスラッシュ実行
     let defeatedCount = 0;
     let currentHP = playerStats.hp;
     const results = [];
     
     for (const boss of bosses) {
+        // 毎回全回復モードの場合はHPをリセット
+        if (fullRecovery) {
+            currentHP = playerStats.hp;
+        }
+        
         // 戦闘統計を計算
         const battleStats = calculateBattleStats(
             { stats: playerStats },
@@ -544,7 +613,7 @@ function startBossRush() {
         
         if (result.win) {
             defeatedCount++;
-            currentHP = result.playerHP; // HPを引き継ぎ
+            currentHP = result.playerHP; // HPを引き継ぎ（全回復モードでも次のループでリセットされる）
         } else {
             // 敗北したらここで終了
             break;
@@ -620,11 +689,23 @@ function createBattleCard(boss, battleStats, result, index) {
         triangleIcon = '🔽';
     }
     
+    // 特効の表示
+    const effectiveIcon = battleStats.hasEffective ? '⚔️特効' : '';
+    
+    // 必殺発生の表示
+    let critDisplay = '';
+    if (result.playerCrits > 0 || result.bossCrits > 0) {
+        const playerCritText = result.playerCrits > 0 ? `<span class="crit-player">💥×${result.playerCrits}</span>` : '';
+        const bossCritText = result.bossCrits > 0 ? `<span class="crit-boss">💢×${result.bossCrits}</span>` : '';
+        critDisplay = `<div class="crit-display">${playerCritText}${bossCritText}</div>`;
+    }
+    
     card.innerHTML = `
         <div class="battle-card-header">
             <div>
                 <span class="boss-name">${boss.name}</span>
                 <span class="boss-class">${boss.className} (${boss.chapter})</span>
+                ${effectiveIcon ? `<span class="effective-badge">${effectiveIcon}</span>` : ''}
             </div>
             <span class="battle-result ${result.win ? 'win' : 'lose'}">
                 ${result.win ? '👍 WIN' : '💀 LOSE'}
@@ -640,10 +721,11 @@ function createBattleCard(boss, battleStats, result, index) {
                 <span>追撃: ${battleStats.canDouble ? '◯' : '✕'}</span>
             </div>
         </div>
+        ${critDisplay}
         <div class="battle-detail">
             ${result.win 
                 ? `残りHP: ${result.playerHP} (${result.rounds}ラウンド)`
-                : `HP ${result.playerHP} → 0 で敗北`
+                : `${result.rounds}ラウンドで敗北`
             }
         </div>
     `;
@@ -698,6 +780,23 @@ function start100Battle() {
     // 敵の名前を表示
     document.getElementById('targetEnemyName').textContent = enemy.name;
     
+    // プレイヤーの戦闘統計を計算（100連戦では毎回同じ値）
+    const playerBattleStats = calculateBattleStats(
+        { stats: playerStats },
+        weapon,
+        enemy,
+        classId
+    );
+    playerBattleStats.originalStats = playerStats;
+    
+    // ボスの戦闘統計を計算（被ダメージ用）
+    const bossBattleStats = calculateBattleStats(
+        enemy,
+        enemy.weapon,
+        { stats: playerStats, classId: classId },
+        enemy.classId
+    );
+    
     // 100連戦実行
     const battleCount = 100;
     let wins = 0;
@@ -707,17 +806,8 @@ function start100Battle() {
     const results = [];
     
     for (let i = 0; i < battleCount; i++) {
-        // 戦闘統計を計算
-        const battleStats = calculateBattleStats(
-            { stats: playerStats },
-            weapon,
-            enemy,
-            classId
-        );
-        battleStats.originalStats = playerStats;
-        
         // 戦闘シミュレーション（毎回HPをリセット）
-        const result = simulateBattle(battleStats, enemy, playerStats.hp);
+        const result = simulateBattle(playerBattleStats, enemy, playerStats.hp);
         results.push(result);
         
         if (result.win) {
@@ -730,13 +820,13 @@ function start100Battle() {
     }
     
     // 結果を表示
-    display100BattleResults(results, wins, losses, totalWinHP, totalRounds, enemy, logContainer);
+    display100BattleResults(results, wins, losses, totalWinHP, totalRounds, enemy, logContainer, playerBattleStats, bossBattleStats);
 }
 
 /**
  * 100連戦の結果を表示
  */
-function display100BattleResults(results, wins, losses, totalWinHP, totalRounds, enemy, logContainer) {
+function display100BattleResults(results, wins, losses, totalWinHP, totalRounds, enemy, logContainer, playerBattleStats, bossBattleStats) {
     // サマリー更新
     document.getElementById('winCount').textContent = wins;
     document.getElementById('loseCount').textContent = losses;
@@ -752,14 +842,57 @@ function display100BattleResults(results, wins, losses, totalWinHP, totalRounds,
     document.getElementById('avgWinHP').textContent = wins > 0 ? `${avgWinHP} HP` : '-';
     document.getElementById('avgRounds').textContent = `${avgRounds} ラウンド`;
     
+    // 戦闘統計を表示
+    document.getElementById('playerDamage').textContent = playerBattleStats.damage;
+    document.getElementById('playerHit').textContent = `${playerBattleStats.hit}%`;
+    document.getElementById('playerCrit').textContent = `${playerBattleStats.crit}%`;
+    document.getElementById('playerDouble').textContent = playerBattleStats.canDouble ? '◯' : '✕';
+    
+    document.getElementById('bossDamage').textContent = bossBattleStats.damage;
+    document.getElementById('bossHit').textContent = `${bossBattleStats.hit}%`;
+    document.getElementById('bossCrit').textContent = `${bossBattleStats.crit}%`;
+    document.getElementById('bossDouble').textContent = bossBattleStats.canDouble ? '◯' : '✕';
+    
+    // 特効表示
+    const effectiveEl = document.getElementById('effectiveStatus');
+    if (playerBattleStats.hasEffective) {
+        effectiveEl.innerHTML = '<span class="effective-badge">⚔️特効</span>';
+    } else {
+        effectiveEl.textContent = '';
+    }
+    
+    // 必殺発生回数を集計
+    const totalPlayerCrits = results.reduce((sum, r) => sum + r.playerCrits, 0);
+    const totalBossCrits = results.reduce((sum, r) => sum + r.bossCrits, 0);
+    
+    document.getElementById('playerCritCount').textContent = totalPlayerCrits;
+    document.getElementById('bossCritCount').textContent = totalBossCrits;
+    
     // 各戦闘結果をタイルで表示
     results.forEach((result, index) => {
         const tile = document.createElement('div');
-        tile.className = `battle-100-item ${result.win ? 'win' : 'lose'}`;
-        tile.textContent = index + 1;
+        
+        // 必殺発生時はクラスを追加
+        let tileClass = `battle-100-item ${result.win ? 'win' : 'lose'}`;
+        if (result.playerCrits > 0) tileClass += ' player-crit';
+        if (result.bossCrits > 0) tileClass += ' boss-crit';
+        tile.className = tileClass;
+        
+        // 必殺発生時はアイコン表示
+        if (result.playerCrits > 0 || result.bossCrits > 0) {
+            tile.innerHTML = `<span class="tile-num">${index + 1}</span><span class="tile-crit">💥</span>`;
+        } else {
+            tile.textContent = index + 1;
+        }
+        
+        // ツールチップ
+        let critInfo = '';
+        if (result.playerCrits > 0) critInfo += ` 自必殺×${result.playerCrits}`;
+        if (result.bossCrits > 0) critInfo += ` 敵必殺×${result.bossCrits}`;
+        
         tile.title = result.win 
-            ? `第${index + 1}戦: 勝利 (残HP: ${result.playerHP}, ${result.rounds}R)`
-            : `第${index + 1}戦: 敗北 (${result.rounds}R)`;
+            ? `第${index + 1}戦: 勝利 (残HP: ${result.playerHP}, ${result.rounds}R)${critInfo}`
+            : `第${index + 1}戦: 敗北 (${result.rounds}R)${critInfo}`;
         
         // アニメーション遅延
         tile.style.opacity = '0';

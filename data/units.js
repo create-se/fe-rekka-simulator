@@ -386,17 +386,6 @@ const UNITS = [
         ccBonus: { hp: 3, str: 1, skl: 2, spd: 1, lck: 0, def: 2, res: 2, con: 1 },
         ccFlag: 1
     },
-    
-    // ===== カスタム =====
-    {
-        id: "custom", name: "【カスタム】", classId: "custom", className: "自由選択", defaultWeapon: null,
-        gender: "male", advancedClassName: null,
-        baseLevel: 1, baseClass: "カスタム",
-        baseStats: { hp: 20, str: 10, skl: 10, spd: 10, lck: 10, def: 10, res: 10, con: 8 },
-        growthRates: { hp: 0, str: 0, skl: 0, spd: 0, lck: 0, def: 0, res: 0 },
-        ccBonus: { hp: 0, str: 0, skl: 0, spd: 0, lck: 0, def: 0, res: 0, con: 0 },
-        ccFlag: 0
-    },
 ];
 
 // ユニットIDでユニットを取得

@@ -543,6 +543,55 @@ select:focus {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
+/* HP回復オプション */
+.hp-recovery-option {
+    margin-bottom: var(--space-md);
+}
+
+.hp-recovery-option.hidden {
+    display: none;
+}
+
+.radio-group {
+    display: flex;
+    gap: var(--space-sm);
+}
+
+.radio-label {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-xs);
+    padding: var(--space-sm) var(--space-md);
+    background: var(--color-bg-input);
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+}
+
+.radio-label:hover {
+    border-color: var(--color-primary);
+}
+
+.radio-label:has(input:checked) {
+    border-color: var(--color-primary);
+    background: rgba(201, 162, 39, 0.1);
+}
+
+.radio-label input[type="radio"] {
+    width: 16px;
+    height: 16px;
+    accent-color: var(--color-primary);
+    cursor: pointer;
+}
+
+.radio-label span {
+    font-size: 0.9rem;
+    color: var(--color-text);
+}
+
 /* ===================================
    100連戦結果表示
 =================================== */
@@ -714,6 +763,646 @@ select:focus {
     to {
         opacity: 1;
         transform: scale(1);
+    }
+}
+
+/* 特効バッジ */
+.effective-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, #ff6b35, #f7931e);
+    color: #fff;
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 4px;
+    margin-left: 8px;
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        box-shadow: 0 0 4px rgba(255, 107, 53, 0.5);
+    }
+    50% {
+        box-shadow: 0 0 12px rgba(255, 107, 53, 0.8);
+    }
+}
+
+/* 100連戦 戦闘統計 */
+.battle-stats-100 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid var(--color-border);
+}
+
+.stats-section {
+    background: var(--color-bg-dark);
+    border-radius: 8px;
+    padding: 12px;
+}
+
+.stats-section.player-stats {
+    border-left: 3px solid var(--color-success);
+}
+
+.stats-section.boss-stats {
+    border-left: 3px solid var(--color-accent);
+}
+
+.stats-header {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--color-text-secondary);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.stat-name {
+    font-size: 0.7rem;
+    color: var(--color-text-muted);
+}
+
+.stat-val {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--color-text);
+}
+
+.player-stats .stat-val {
+    color: var(--color-success);
+}
+
+.boss-stats .stat-val {
+    color: var(--color-accent);
+}
+
+@media (max-width: 480px) {
+    .battle-stats-100 {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* 必殺表示 */
+.crit-display {
+    display: flex;
+    gap: 12px;
+    padding: 8px 12px;
+    background: linear-gradient(135deg, rgba(255, 200, 0, 0.15), rgba(255, 100, 0, 0.15));
+    border-radius: 6px;
+    margin-top: 8px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    animation: critFlash 0.5s ease-out;
+}
+
+@keyframes critFlash {
+    0% {
+        background: rgba(255, 200, 0, 0.5);
+    }
+    100% {
+        background: linear-gradient(135deg, rgba(255, 200, 0, 0.15), rgba(255, 100, 0, 0.15));
+    }
+}
+
+.crit-player {
+    color: #ffc107;
+}
+
+.crit-boss {
+    color: #ff5722;
+}
+
+/* 100連戦タイルの必殺表示 */
+.battle-100-item.player-crit {
+    position: relative;
+    box-shadow: 0 0 8px rgba(255, 193, 7, 0.8);
+}
+
+.battle-100-item.boss-crit.lose {
+    box-shadow: 0 0 8px rgba(255, 87, 34, 0.8);
+}
+
+.battle-100-item .tile-num {
+    font-size: 0.6rem;
+}
+
+.battle-100-item .tile-crit {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    font-size: 0.5rem;
+    animation: critBounce 0.3s ease-out;
+}
+
+@keyframes critBounce {
+    0% {
+        transform: scale(0);
+    }
+    50% {
+        transform: scale(1.5);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* 必殺発生カウント */
+.crit-count {
+    grid-column: 1 / -1;
+    flex-direction: row !important;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 8px;
+    border-top: 1px dashed var(--color-border);
+    margin-top: 4px;
+}
+
+.crit-val {
+    color: #ffc107 !important;
+    font-size: 1.1rem !important;
+}
+
+.boss-stats .crit-val {
+    color: #ff5722 !important;
+}
+
+/* ===================================
+   スマートフォン対応
+=================================== */
+
+/* タブレット (768px以下) */
+@media (max-width: 768px) {
+    .container {
+        padding: var(--space-md);
+    }
+    
+    .header {
+        padding: var(--space-lg) 0;
+        margin-bottom: var(--space-lg);
+    }
+    
+    .title-main {
+        font-size: 1.8rem;
+    }
+    
+    .title-sub {
+        font-size: 0.8rem;
+        letter-spacing: 0.2em;
+    }
+    
+    .subtitle {
+        font-size: 0.95rem;
+    }
+    
+    .panel {
+        padding: var(--space-md);
+    }
+    
+    .panel-title {
+        font-size: 1.1rem;
+        margin-bottom: var(--space-md);
+    }
+    
+    /* ステータスグリッド 2列 */
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--space-sm);
+    }
+    
+    /* レベル入力エリア */
+    .level-input-area {
+        flex-wrap: wrap;
+        gap: var(--space-sm);
+    }
+    
+    .level-group {
+        flex: 0 0 60px;
+    }
+    
+    .btn-calc {
+        flex: 1 0 100%;
+        margin-top: var(--space-xs);
+    }
+    
+    /* 100連戦統計 */
+    .result-100-stats {
+        gap: var(--space-md);
+    }
+    
+    .stat-box {
+        padding: var(--space-sm) var(--space-md);
+    }
+    
+    .stat-box .stat-value {
+        font-size: 2rem;
+    }
+    
+    .enemy-name {
+        font-size: 1.3rem;
+    }
+    
+    .win-rate-text span {
+        font-size: 1.5rem;
+    }
+}
+
+/* スマートフォン (480px以下) */
+@media (max-width: 480px) {
+    :root {
+        --space-lg: 1rem;
+        --space-xl: 1.25rem;
+    }
+    
+    .container {
+        padding: var(--space-sm);
+    }
+    
+    .header {
+        padding: var(--space-md) 0;
+        margin-bottom: var(--space-md);
+    }
+    
+    .title-main {
+        font-size: 1.4rem;
+    }
+    
+    .title-sub {
+        font-size: 0.7rem;
+    }
+    
+    .subtitle {
+        font-size: 0.85rem;
+        margin-top: var(--space-sm);
+    }
+    
+    .panel {
+        padding: var(--space-sm);
+        border-radius: 8px;
+    }
+    
+    .panel-title {
+        font-size: 1rem;
+        padding-bottom: var(--space-sm);
+        margin-bottom: var(--space-md);
+    }
+    
+    .panel-title .icon {
+        font-size: 1.2rem;
+    }
+    
+    /* フォーム要素 */
+    input[type="text"],
+    input[type="number"],
+    select {
+        padding: var(--space-sm);
+        font-size: 16px; /* iOSズーム防止 */
+    }
+    
+    .form-group {
+        margin-bottom: var(--space-sm);
+    }
+    
+    .form-group label {
+        font-size: 0.8rem;
+    }
+    
+    /* ステータスグリッド */
+    .stats-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 4px;
+    }
+    
+    .stat-input label {
+        font-size: 0.65rem;
+    }
+    
+    .stat-input input {
+        padding: var(--space-xs);
+        font-size: 14px;
+    }
+    
+    /* レベル入力エリア */
+    .level-input-area {
+        padding: var(--space-sm);
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .level-group {
+        flex: 0 0 auto;
+        width: 100%;
+    }
+    
+    .level-group input {
+        width: 100%;
+    }
+    
+    .cc-group {
+        width: 100%;
+    }
+    
+    .checkbox-label {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .btn-calc {
+        width: 100%;
+        padding: var(--space-sm);
+    }
+    
+    /* モードタブ */
+    .mode-tabs {
+        gap: 1px;
+    }
+    
+    .mode-tab {
+        padding: var(--space-sm);
+        font-size: 0.8rem;
+    }
+    
+    /* HP回復オプション */
+    .radio-group {
+        flex-direction: column;
+        gap: var(--space-xs);
+    }
+    
+    .radio-label {
+        padding: var(--space-sm);
+    }
+    
+    .radio-label span {
+        font-size: 0.85rem;
+    }
+    
+    /* 開始ボタン */
+    .btn-primary {
+        padding: var(--space-md);
+        font-size: 1rem;
+        min-height: 48px; /* タッチターゲット */
+    }
+    
+    /* 結果サマリー */
+    .result-summary {
+        grid-template-columns: 1fr 1fr;
+        gap: var(--space-sm);
+    }
+    
+    .summary-value {
+        font-size: 2rem;
+    }
+    
+    .summary-rank {
+        font-size: 2rem;
+    }
+    
+    /* 100連戦 */
+    .result-100-summary {
+        padding: var(--space-md);
+    }
+    
+    .result-100-header {
+        margin-bottom: var(--space-md);
+    }
+    
+    .enemy-name {
+        font-size: 1.1rem;
+        display: block;
+    }
+    
+    .vs-text {
+        display: block;
+        margin-left: 0;
+        margin-top: var(--space-xs);
+        font-size: 0.85rem;
+    }
+    
+    .result-100-stats {
+        flex-direction: row;
+        gap: var(--space-sm);
+    }
+    
+    .stat-box {
+        flex: 1;
+        padding: var(--space-sm);
+    }
+    
+    .stat-box .stat-value {
+        font-size: 1.6rem;
+    }
+    
+    .stat-box .stat-label {
+        font-size: 0.7rem;
+    }
+    
+    .stat-box .stat-unit {
+        font-size: 0.8rem;
+    }
+    
+    .win-rate-text {
+        font-size: 1rem;
+    }
+    
+    .win-rate-text span {
+        font-size: 1.3rem;
+    }
+    
+    .result-100-detail {
+        padding: var(--space-sm);
+    }
+    
+    .detail-row {
+        font-size: 0.8rem;
+    }
+    
+    /* 戦闘統計グリッド */
+    .battle-stats-100 {
+        gap: var(--space-sm);
+        margin-top: var(--space-md);
+        padding-top: var(--space-md);
+    }
+    
+    .stats-section {
+        padding: var(--space-sm);
+    }
+    
+    .stats-header {
+        font-size: 0.75rem;
+        margin-bottom: var(--space-sm);
+    }
+    
+    .stats-grid {
+        gap: 6px;
+    }
+    
+    .stat-name {
+        font-size: 0.6rem;
+    }
+    
+    .stat-val {
+        font-size: 0.9rem;
+    }
+    
+    .crit-count {
+        padding-top: 6px;
+        margin-top: 2px;
+    }
+    
+    .crit-val {
+        font-size: 0.95rem !important;
+    }
+    
+    /* バトルログ */
+    .battle-log {
+        max-height: 400px;
+    }
+    
+    .battle-card {
+        padding: var(--space-sm);
+        margin-bottom: var(--space-sm);
+    }
+    
+    .battle-card-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--space-xs);
+    }
+    
+    .boss-name {
+        font-size: 1rem;
+    }
+    
+    .boss-class {
+        font-size: 0.75rem;
+    }
+    
+    .battle-result {
+        font-size: 0.8rem;
+        align-self: flex-end;
+        margin-top: -1.5rem;
+    }
+    
+    .battle-stats {
+        grid-template-columns: 1fr;
+        gap: var(--space-xs);
+        font-size: 0.8rem;
+    }
+    
+    .battle-detail {
+        font-size: 0.75rem;
+    }
+    
+    .crit-display {
+        font-size: 0.75rem;
+        padding: 6px 10px;
+        gap: 8px;
+    }
+    
+    .effective-badge {
+        font-size: 0.6rem;
+        padding: 1px 4px;
+        margin-left: 4px;
+    }
+    
+    /* 100連戦タイル */
+    .battle-100-log {
+        grid-template-columns: repeat(auto-fill, minmax(32px, 1fr));
+        gap: 3px;
+        padding: var(--space-xs);
+    }
+    
+    .battle-100-item {
+        font-size: 0.6rem;
+    }
+    
+    .battle-100-item .tile-crit {
+        font-size: 0.4rem;
+        top: -3px;
+        right: -3px;
+    }
+    
+    /* フッター */
+    .footer {
+        margin-top: var(--space-lg);
+        padding-top: var(--space-md);
+        font-size: 0.75rem;
+    }
+}
+
+/* 極小スマホ (360px以下) */
+@media (max-width: 360px) {
+    .title-main {
+        font-size: 1.2rem;
+    }
+    
+    .stats-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 2px;
+    }
+    
+    .stat-input input {
+        padding: 4px;
+        font-size: 13px;
+    }
+    
+    .stat-input label {
+        font-size: 0.6rem;
+    }
+    
+    .stat-box .stat-value {
+        font-size: 1.4rem;
+    }
+    
+    .battle-100-log {
+        grid-template-columns: repeat(auto-fill, minmax(28px, 1fr));
+    }
+}
+
+/* タッチデバイス向けのホバー無効化 */
+@media (hover: none) {
+    .btn-primary:hover {
+        transform: none;
+        box-shadow: none;
+    }
+    
+    .btn-calc:hover {
+        background: var(--color-bg-input);
+        transform: none;
+    }
+    
+    .battle-100-item:hover {
+        transform: none;
+    }
+    
+    /* タップ時のフィードバック */
+    .btn-primary:active {
+        transform: scale(0.98);
+        opacity: 0.9;
+    }
+    
+    .btn-calc:active {
+        background: rgba(201, 162, 39, 0.15);
+    }
+    
+    .mode-tab:active {
+        background: rgba(255, 255, 255, 0.1);
     }
 }
 
