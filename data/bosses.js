@@ -452,9 +452,9 @@ const BOSSES = [
         name: "ネルガル",
         chapter: "終章",
         classId: "darkdruid",
-        className: "ダークドルイド",
+        className: "災いを招く者",
         difficulty: "eliwood_normal",
-        stats: { hp: 50, str: 22, skl: 18, spd: 16, lck: 12, def: 16, res: 23, con: 10 },
+        stats: { hp: 75, str: 30, skl: 18, spd: 15, lck: 20, def: 28, res: 30, con: 10 },
         weapon: { id: "ereshkigal", name: "エレシュキガル", type: "dark", might: 20, weight: 18, hit: 95, crit: 10 },
         description: "全ての黒幕。竜の力「エーギル」を求める闇魔道士。"
     },
@@ -465,7 +465,7 @@ const BOSSES = [
         classId: "firedragon",
         className: "火竜",
         difficulty: "eliwood_normal",
-        stats: { hp: 120, str: 25, skl: 18, spd: 10, lck: 8, def: 22, res: 28, con: 25 },
+        stats: { hp: 120, str: 27, skl: 35, spd: 15, lck: 24, def: 40, res: 40, con: 25 },
         weapon: { id: "flametongue", name: "火のブレス", type: "dragon", might: 37, weight: 0, hit: 180, crit: 0, fixedDamage: true, range: [1, 2, 3] },
         description: "ネルガルが呼び出した火竜。烈火の剣の最後の敵。"
     },
@@ -786,9 +786,9 @@ const BOSSES = [
         name: "ネルガル",
         chapter: "終章",
         classId: "darkdruid",
-        className: "ダークドルイド",
+        className: "災いを招く者",
         difficulty: "hector_hard",
-        stats: { hp: 65, str: 28, skl: 24, spd: 22, lck: 16, def: 22, res: 28, con: 11 },
+        stats: { hp: 77, str: 30, skl: 19, spd: 16, lck: 20, def: 29, res: 30, con: 10 },
         weapon: { id: "ereshkigal", name: "エレシュキガル", type: "dark", might: 20, weight: 18, hit: 95, crit: 10 },
         description: "全ての黒幕。竜の力「エーギル」を求める闇魔道士。"
     },
@@ -799,8 +799,8 @@ const BOSSES = [
         classId: "firedragon",
         className: "火竜",
         difficulty: "hector_hard",
-        stats: { hp: 150, str: 32, skl: 24, spd: 14, lck: 12, def: 28, res: 35, con: 25 },
-        weapon: { id: "flametongue", name: "火のブレス", type: "dragon", might: 37, weight: 0, hit: 180, crit: 0, fixedDamage: true, range: [1, 2, 3] },
+        stats: { hp: 150, str: 29, skl: 36, spd: 16, lck: 24, def: 40, res: 41, con: 25 },
+        weapon: { id: "flametongue", name: "火のブレス", type: "dragon", might: 39, weight: 0, hit: 180, crit: 0, fixedDamage: true, range: [1, 2, 3] },
         description: "ネルガルが呼び出した火竜。烈火の剣の最後の敵。"
     }
 ];
