@@ -46,7 +46,7 @@ const CLASSES = {
     bishop: { name: "司祭", critBonus: 0, weapons: ["light", "staff"], movement: "foot" },
     shaman: { name: "シャーマン", critBonus: 0, weapons: ["dark"], movement: "foot" },
     druid: { name: "ドルイド", critBonus: 0, weapons: ["dark", "staff"], movement: "foot" },
-    darkdruid: { name: "ダークドルイド", critBonus: 0, weapons: ["dark"], movement: "foot" },
+    darkdruid: { name: "災いを招く者", critBonus: 0, weapons: ["dark"], movement: "foot" },
 
     // ===== 飛行 =====
     pegasus: { name: "ペガサスナイト", critBonus: 0, weapons: ["lance"], movement: "flying" },
