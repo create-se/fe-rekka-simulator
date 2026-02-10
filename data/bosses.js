@@ -666,7 +666,7 @@ const BOSSES = [
         chapter: "25章",
         classId: "paladin",
         className: "パラディン",
-        difficulty: "eliwood_normal",
+        difficulty: "hector_hard",
         stats: { hp: 40, str: 15, skl: 14, spd: 13, lck: 9, def: 13, res: 11, con: 12 },
         weapon: { id: "silver_lance", name: "ぎんのやり", type: "lance", might: 14, weight: 10, hit: 75, crit: 0 },
         description: "ベルンの貴族。ソーニャに加担する。"

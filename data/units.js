@@ -92,7 +92,7 @@ const UNITS = [
         ccFlag: 1
     },
     {
-        id: "lowen", name: "ローウェン", classId: "paladin", className: "パラディン", defaultWeapon: "silver_lance",
+        id: "lowen", name: "ロウエン", classId: "paladin", className: "パラディン", defaultWeapon: "silver_lance",
         gender: "male", advancedClassName: "パラディン(男)",
         baseLevel: 2, baseClass: "ソシアルナイト",
         baseStats: { hp: 23, str: 7, skl: 5, spd: 7, lck: 3, def: 7, res: 0, con: 10 },
@@ -130,7 +130,7 @@ const UNITS = [
         ccFlag: 1
     },
     {
-        id: "wallace", name: "ウォレス", classId: "general", className: "ジェネラル", defaultWeapon: "silver_lance",
+        id: "wallace", name: "ワレス", classId: "general", className: "ジェネラル", defaultWeapon: "silver_lance",
         gender: "male", advancedClassName: "ジェネラル",
         baseLevel: 12, baseClass: "ジェネラル",
         baseStats: { hp: 30, str: 13, skl: 7, spd: 5, lck: 10, def: 15, res: 2, con: 13 },
@@ -357,24 +357,24 @@ const UNITS = [
     },
     
     // ===== 踊り子・バード =====
-    {
-        id: "ninian", name: "ニニアン", classId: "dancer", className: "踊り子", defaultWeapon: "iron_sword",
-        gender: "female", advancedClassName: "バード/踊り子",
-        baseLevel: 1, baseClass: "バード/踊り子",
-        baseStats: { hp: 14, str: 0, skl: 0, spd: 12, lck: 10, def: 5, res: 4, con: 4 },
-        growthRates: { hp: 0.85, str: 0.05, skl: 0.05, spd: 0.70, lck: 0.80, def: 0.30, res: 0.70 },
-        ccBonus: { hp: 0, str: 0, skl: 0, spd: 0, lck: 0, def: 0, res: 0, con: 0 },
-        ccFlag: 0
-    },
-    {
-        id: "nils", name: "ニルス", classId: "bard", className: "バード", defaultWeapon: null,
-        gender: "male", advancedClassName: "バード/踊り子",
-        baseLevel: 1, baseClass: "バード/踊り子",
-        baseStats: { hp: 14, str: 0, skl: 0, spd: 12, lck: 10, def: 5, res: 4, con: 3 },
-        growthRates: { hp: 0.85, str: 0.05, skl: 0.05, spd: 0.70, lck: 0.80, def: 0.30, res: 0.70 },
-        ccBonus: { hp: 0, str: 0, skl: 0, spd: 0, lck: 0, def: 0, res: 0, con: 0 },
-        ccFlag: 0
-    },
+    // {
+    //     id: "ninian", name: "ニニアン", classId: "dancer", className: "踊り子", defaultWeapon: "iron_sword",
+    //     gender: "female", advancedClassName: "バード/踊り子",
+    //     baseLevel: 1, baseClass: "バード/踊り子",
+    //     baseStats: { hp: 14, str: 0, skl: 0, spd: 12, lck: 10, def: 5, res: 4, con: 4 },
+    //     growthRates: { hp: 0.85, str: 0.05, skl: 0.05, spd: 0.70, lck: 0.80, def: 0.30, res: 0.70 },
+    //     ccBonus: { hp: 0, str: 0, skl: 0, spd: 0, lck: 0, def: 0, res: 0, con: 0 },
+    //     ccFlag: 0
+    // },
+    // {
+    //     id: "nils", name: "ニルス", classId: "bard", className: "バード", defaultWeapon: null,
+    //     gender: "male", advancedClassName: "バード/踊り子",
+    //     baseLevel: 1, baseClass: "バード/踊り子",
+    //     baseStats: { hp: 14, str: 0, skl: 0, spd: 12, lck: 10, def: 5, res: 4, con: 3 },
+    //     growthRates: { hp: 0.85, str: 0.05, skl: 0.05, spd: 0.70, lck: 0.80, def: 0.30, res: 0.70 },
+    //     ccBonus: { hp: 0, str: 0, skl: 0, spd: 0, lck: 0, def: 0, res: 0, con: 0 },
+    //     ccFlag: 0
+    // },
     
     // ===== その他 =====
     {
