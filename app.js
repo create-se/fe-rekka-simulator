@@ -323,6 +323,10 @@ function isEffective(weapon, targetClassId) {
     return false;
 }
 
+function isDragon(classId) {
+    return ['firedragon', 'wyvern', 'wyvernlord'].includes(classId);
+}
+
 /**
  * 戦闘統計を計算する
  * @param {Object} unit - ユニットデータ
@@ -344,9 +348,22 @@ function calculateBattleStats(unit, weapon, target, classId) {
     // 武器相性
     const triangleBonus = getWeaponTriangleBonus(weapon.type, targetWeapon.type);
     
-    // 特効判定（威力3倍）
+    // 特効判定（威力3倍、ただし竜特効は2倍、アーリアルは対竜でも3倍）
     const hasEffective = isEffective(weapon, targetClassId);
-    const effectiveMight = hasEffective ? weapon.might * 3 : weapon.might;
+    let effectiveMight = weapon.might;
+
+    if (hasEffective) {
+        if (weapon.id === 'aureola') {
+            // アーリアルは常に3倍
+            effectiveMight = weapon.might * 3;
+        } else if (isDragon(targetClassId)) {
+            // 竜特効は通常2倍
+            effectiveMight = weapon.might * 2;
+        } else {
+            // その他の特効（アーマー、騎馬など）は3倍
+            effectiveMight = weapon.might * 3;
+        }
+    }
     
     // 攻撃力計算（魔法か物理か判定）
     const isMagic = ['anima', 'light', 'dark'].includes(weapon.type);
@@ -360,7 +377,13 @@ function calculateBattleStats(unit, weapon, target, classId) {
         const baseDamage = stats.str + effectiveMight + triangleBonus.might;
         
         // 守備か魔防で軽減
-        const targetDef = isMagic ? targetStats.res : targetStats.def;
+        let targetDef = isMagic ? targetStats.res : targetStats.def;
+        
+        // 防御無視（ルナなど）の場合、防御力を0として計算
+        if (weapon.piercing) {
+            targetDef = 0;
+        }
+
         damage = Math.max(0, baseDamage - targetDef);
     }
     
@@ -434,7 +457,13 @@ function simulateBattle(playerStats, boss, playerHP) {
     const maxRounds = 20; // 無限ループ防止
     
     // ボスの戦闘統計を事前計算
-    const bossStats = calculateBattleStats(boss, boss.weapon, { stats: playerStats.originalStats }, boss.classId);
+    const bossStats = calculateBattleStats(
+        boss, 
+        boss.weapon, 
+        { stats: playerStats.originalStats, classId: playerStats.classId }, 
+        boss.classId
+    );
+    bossStats.classId = boss.classId;
     
     while (currentHP > 0 && bossCurrentHP > 0 && round < maxRounds) {
         round++;
@@ -445,42 +474,42 @@ function simulateBattle(playerStats, boss, playerHP) {
         if (isPlayerFirst) {
             // === プレイヤー先攻ラウンド ===
             // プレイヤーの攻撃
-            bossCurrentHP = doAttack(playerStats, bossCurrentHP, log, 'player', false);
+            bossCurrentHP = doAttack(playerStats, bossCurrentHP, log, 'player', false, playerStats.classId, bossStats.classId);
             if (bossCurrentHP <= 0) break;
             
             // プレイヤーの追撃
             if (playerStats.canDouble) {
-                bossCurrentHP = doAttack(playerStats, bossCurrentHP, log, 'player', true);
+                bossCurrentHP = doAttack(playerStats, bossCurrentHP, log, 'player', true, playerStats.classId, bossStats.classId);
                 if (bossCurrentHP <= 0) break;
             }
             
             // ボスの反撃
-            currentHP = doAttack(bossStats, currentHP, log, 'boss', false);
+            currentHP = doAttack(bossStats, currentHP, log, 'boss', false, bossStats.classId, playerStats.classId);
             if (currentHP <= 0) break;
             
             // ボスの追撃
             if (bossStats.canDouble) {
-                currentHP = doAttack(bossStats, currentHP, log, 'boss', true);
+                currentHP = doAttack(bossStats, currentHP, log, 'boss', true, bossStats.classId, playerStats.classId);
             }
         } else {
             // === ボス先攻ラウンド ===
             // ボスの攻撃
-            currentHP = doAttack(bossStats, currentHP, log, 'boss', false);
+            currentHP = doAttack(bossStats, currentHP, log, 'boss', false, bossStats.classId, playerStats.classId);
             if (currentHP <= 0) break;
             
             // ボスの追撃
             if (bossStats.canDouble) {
-                currentHP = doAttack(bossStats, currentHP, log, 'boss', true);
+                currentHP = doAttack(bossStats, currentHP, log, 'boss', true, bossStats.classId, playerStats.classId);
                 if (currentHP <= 0) break;
             }
             
             // プレイヤーの反撃
-            bossCurrentHP = doAttack(playerStats, bossCurrentHP, log, 'player', false);
+            bossCurrentHP = doAttack(playerStats, bossCurrentHP, log, 'player', false, playerStats.classId, bossStats.classId);
             if (bossCurrentHP <= 0) break;
             
             // プレイヤーの追撃
             if (playerStats.canDouble) {
-                bossCurrentHP = doAttack(playerStats, bossCurrentHP, log, 'player', true);
+                bossCurrentHP = doAttack(playerStats, bossCurrentHP, log, 'player', true, playerStats.classId, bossStats.classId);
             }
         }
     }
@@ -507,19 +536,35 @@ function simulateBattle(playerStats, boss, playerHP) {
  * @param {Array} log - 戦闘ログ
  * @param {string} attackerType - 'player' or 'boss'
  * @param {boolean} isFollow - 追撃かどうか
+ * @param {string} attackerClassId - 攻撃者のクラスID
+ * @param {string} targetClassId - 対象のクラスID
  * @returns {number} 対象の残りHP
  */
-function doAttack(attackerStats, targetHP, log, attackerType, isFollow) {
+function doAttack(attackerStats, targetHP, log, attackerType, isFollow, attackerClassId, targetClassId) {
     const hits = rollHit(attackerStats.hit);
     if (hits) {
-        const isCrit = rollHit(attackerStats.crit);
-        const dmg = isCrit ? attackerStats.damage * 3 : attackerStats.damage;
+        let isCrit = rollHit(attackerStats.crit);
+        let dmg = isCrit ? Math.max(0, attackerStats.damage * 3) : Math.max(0, attackerStats.damage);
+        
+        // アサシンの「瞬殺」判定 (必殺発動時、50%の確率で即死)
+        // ただし、火竜には無効
+        let isLethality = false;
+        if (isCrit && attackerClassId === 'assassin' && targetClassId !== 'firedragon') {
+            if (Math.random() < 0.5) {
+                isLethality = true;
+                dmg = targetHP; // 残りHP分のダメージを与えて即死させる
+            }
+        }
+
+        // ダメージは0未満にならない
+        if (dmg < 0) dmg = 0;
+
         targetHP -= dmg;
-        log.push({ attacker: attackerType, damage: dmg, crit: isCrit, follow: isFollow });
+        log.push({ attacker: attackerType, damage: dmg, crit: isCrit, lethality: isLethality, follow: isFollow });
     } else {
         log.push({ attacker: attackerType, damage: 0, miss: true, follow: isFollow });
     }
-    return targetHP;
+    return Math.max(0, targetHP);
 }
 
 /**
@@ -601,6 +646,7 @@ function startBossRush() {
             classId
         );
         battleStats.originalStats = playerStats;
+        battleStats.classId = classId; // クラスIDを追加
         
         // 戦闘シミュレーション
         const result = simulateBattle(battleStats, boss, currentHP);
@@ -788,6 +834,7 @@ function start100Battle() {
         classId
     );
     playerBattleStats.originalStats = playerStats;
+    playerBattleStats.classId = classId; // クラスIDを追加
     
     // ボスの戦闘統計を計算（被ダメージ用）
     const bossBattleStats = calculateBattleStats(

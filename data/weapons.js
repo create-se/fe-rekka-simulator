@@ -97,7 +97,7 @@ const WEAPONS = {
     // ===== 闇魔法 =====
     dark: [
         { id: "flux", name: "ミィル", type: "dark", might: 7, weight: 8, hit: 80, crit: 0, range: [1, 2], rank: "D" },
-        { id: "luna", name: "ルナ", type: "dark", might: 0, weight: 12, hit: 50, crit: 20, range: [1, 2], rank: "C", piercing: true },
+        { id: "luna", name: "ルナ", type: "dark", might: 0, weight: 12, hit: 95, crit: 20, range: [1, 2], rank: "C", piercing: true },
         { id: "nosferatu", name: "リザイア", type: "dark", might: 10, weight: 14, hit: 70, crit: 0, range: [1, 2], rank: "C", drain: true },
         { id: "eclipse", name: "イクリプス", type: "dark", might: 0, weight: 12, hit: 30, crit: 0, range: [3, 10], rank: "A", halveHP: true },
         { id: "fenrir", name: "フェンリル", type: "dark", might: 15, weight: 18, hit: 70, crit: 0, range: [1, 2], rank: "A" },
