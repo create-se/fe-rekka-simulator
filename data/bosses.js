@@ -174,24 +174,24 @@ const BOSSES = [
     },
     {
         id: "boies_en",
-        name: "ボーイス",
+        name: "ボイズ",
         chapter: "13章",
         classId: "knight",
         className: "アーマーナイト",
         difficulty: "eliwood_normal",
         stats: { hp: 26, str: 10, skl: 4, spd: 2, lck: 3, def: 12, res: 2, con: 14 },
-        weapon: { id: "killer_lance", name: "キラーランス", type: "lance", might: 10, weight: 9, hit: 70, crit: 30 },
+        weapon: { id: "steel_lance", name: "はがねのやり", type: "lance", might: 10, weight: 13, hit: 70, crit: 0 },
         description: "サンタルーズ城を守る重騎士。"
     },
     {
         id: "puzon",
         name: "ブゾン",
         chapter: "13章外伝",
-        classId: "pirate",
-        className: "海賊",
+        classId: "mercenary",
+        className: "傭兵",
         difficulty: "eliwood_normal",
-        stats: { hp: 32, str: 10, skl: 5, spd: 7, lck: 2, def: 6, res: 0, con: 11 },
-        weapon: { id: "steel_axe", name: "はがねの斧", type: "axe", might: 11, weight: 15, hit: 65, crit: 0 },
+        stats: { hp: 26, str: 10, skl: 8, spd: 9, lck: 5, def: 6, res: 6, con: 11 },
+        weapon: { id: "steel_sword", name: "はがねの剣", type: "sword", might: 8, weight: 10, hit: 75, crit: 0 },
         description: "海賊の頭。"
     },
     {
@@ -202,7 +202,7 @@ const BOSSES = [
         className: "ソシアルナイト",
         difficulty: "eliwood_normal",
         stats: { hp: 28, str: 10, skl: 7, spd: 8, lck: 5, def: 8, res: 4, con: 10 },
-        weapon: { id: "steel_lance", name: "はがねのやり", type: "lance", might: 10, weight: 13, hit: 70, crit: 0 },
+        weapon: { id: "silver_lance", name: "銀のやり", type: "lance", might: 14, weight: 10, hit: 75, crit: 0 },
         description: "ラウス侯の息子。エリウッドの幼馴染。"
     },
     {
@@ -212,8 +212,8 @@ const BOSSES = [
         classId: "knight",
         className: "アーマーナイト",
         difficulty: "eliwood_normal",
-        stats: { hp: 30, str: 11, skl: 6, spd: 3, lck: 3, def: 13, res: 3, con: 14 },
-        weapon: { id: "killer_lance", name: "キラーランス", type: "lance", might: 10, weight: 9, hit: 70, crit: 30 },
+        stats: { hp: 31, str: 13, skl: 10, spd: 4, lck: 4, def: 11, res: 4, con: 14 },
+        weapon: { id: "javelin", name: "てやり", type: "lance", might: 6, weight: 11, hit: 65, crit: 0, range: [1, 2] },
         description: "ラウス侯に仕える重騎士。"
     },
     {
@@ -245,7 +245,7 @@ const BOSSES = [
         classId: "shaman",
         className: "シャーマン",
         difficulty: "eliwood_normal",
-        stats: { hp: 28, str: 12, skl: 12, spd: 10, lck: 8, def: 7, res: 15, con: 5 },
+        stats: { hp: 28, str: 12, skl: 11, spd: 10, lck: 8, def: 7, res: 15, con: 5 },
         weapon: { id: "luna", name: "ルナ", type: "dark", might: 0, weight: 12, hit: 50, crit: 0 },
         description: ""
     },
@@ -256,18 +256,18 @@ const BOSSES = [
         classId: "nomadtrooper",
         className: "遊牧騎兵",
         difficulty: "eliwood_normal",
-        stats: { hp: 35, str: 14, skl: 17, spd: 16, lck: 9, def: 10, res: 9, con: 9 },
-        weapon: { id: "killer_bow", name: "キラーボウ", type: "bow", might: 9, weight: 7, hit: 75, crit: 30 },
+        stats: { hp: 35, str: 15, skl: 13, spd: 12, lck: 4, def: 12, res: 3, con: 9 },
+        weapon: { id: "short_bow", name: "短弓", type: "bow", might: 5, weight: 3, hit: 85, crit: 10, range: [2], rank: "E", effective: ["flying"] },
         description: "四牙のひとり。「疾風」の異名を持つ。"
     },
     {
         id: "daren_en",
-        name: "ダレーン",
+        name: "ダーレン",
         chapter: "19章",
         classId: "general",
         className: "ジェネラル",
         difficulty: "eliwood_normal",
-        stats: { hp: 34, str: 15, skl: 9, spd: 8, lck: 2, def: 15, res: 13, con: 15 },
+        stats: { hp: 34, str: 14, skl: 9, spd: 8, lck: 2, def: 15, res: 13, con: 15 },
         weapon: { id: "silver_lance", name: "ぎんのやり", type: "lance", might: 14, weight: 10, hit: 75, crit: 0 },
         description: "黒い牙の一員。"
     },
@@ -278,8 +278,8 @@ const BOSSES = [
         classId: "warrior",
         className: "ウォーリア",
         difficulty: "eliwood_normal",
-        stats: { hp: 40, str: 15, skl: 9, spd: 9, lck: 3, def: 9, res: 2, con: 13 },
-        weapon: { id: "killer_axe", name: "キラーアクス", type: "axe", might: 11, weight: 11, hit: 65, crit: 30 },
+        stats: { hp: 42, str: 16, skl: 9, spd: 7, lck: 3, def: 12, res: 7, con: 13 },
+        weapon: { id: "silver_axe", name: "ぎんの斧", type: "axe", might: 15, weight: 12, hit: 70, crit: 0 },
         description: "海賊の頭。盗んだ財宝を守る。"
     },
     {
@@ -289,30 +289,30 @@ const BOSSES = [
         classId: "paladin",
         className: "パラディン",
         difficulty: "eliwood_normal",
-        stats: { hp: 38, str: 15, skl: 17, spd: 14, lck: 7, def: 11, res: 5, con: 11 },
+        stats: { hp: 38, str: 14, skl: 10, spd: 9, lck: 5, def: 12, res: 14, con: 11 },
         weapon: { id: "spear", name: "スレンドスピア", type: "lance", might: 12, weight: 10, hit: 70, crit: 5 },
         description: "傭兵団の団長。エリウッドたちを狙う。"
     },
     {
-        id: "uhai",
-        name: "ウハイ",
-        chapter: "21章",
-        classId: "nomadtrooper",
-        className: "遊牧騎兵",
+        id: "pole",
+        name: "ポール",
+        chapter: "22章",
+        classId: "warrior",
+        className: "ウォーリア",
         difficulty: "eliwood_normal",
-        stats: { hp: 35, str: 14, skl: 17, spd: 16, lck: 9, def: 10, res: 9, con: 9 },
-        weapon: { id: "killer_bow", name: "キラーボウ", type: "bow", might: 9, weight: 7, hit: 75, crit: 30 },
-        description: "四牙のひとり。「疾風」の異名を持つ。"
+        stats: { hp: 47, str: 19, skl: 12, spd: 12, lck: 2, def: 11, res: 9, con: 13 },
+        weapon: { id: "killer_axe", name: "キラーアクス", type: "axe", might: 11, weight: 11, hit: 65, crit: 30 },
+        description: "なんか前作にもいた人"
     },
     {
-        id: "aion_en",
-        name: "アイオン",
+        id: "jasmine",
+        name: "ジャスミン",
         chapter: "22章",
-        classId: "wyvern",
-        className: "ドラゴンナイト",
+        classId: "warrior",
+        className: "ウォーリア",
         difficulty: "eliwood_normal",
-        stats: { hp: 36, str: 13, skl: 9, spd: 9, lck: 3, def: 14, res: 2, con: 12 },
-        weapon: { id: "killer_lance", name: "キラーランス", type: "lance", might: 10, weight: 9, hit: 70, crit: 30 },
+        stats: { hp: 46, str: 17, skl: 14, spd: 14, lck: 6, def: 8, res: 11, con: 13 },
+        weapon: { id: "steel_axe", name: "はがねの斧", type: "axe", might: 11, weight: 15, hit: 65, crit: 0 },
         description: "ベルン竜騎士団の将。"
     },
     {
@@ -338,20 +338,9 @@ const BOSSES = [
         description: "四牙のひとり。「狂犬」の異名を持つ。ロイドの弟。"
     },
     {
-        id: "pascal",
-        name: "パスカル",
-        chapter: "25章",
-        classId: "paladin",
-        className: "パラディン",
-        difficulty: "eliwood_normal",
-        stats: { hp: 40, str: 15, skl: 14, spd: 13, lck: 9, def: 13, res: 11, con: 12 },
-        weapon: { id: "silver_lance", name: "ぎんのやり", type: "lance", might: 14, weight: 10, hit: 75, crit: 0 },
-        description: "ベルンの貴族。ソーニャに加担する。"
-    },
-    {
         id: "kenneth_en",
         name: "ケネス",
-        chapter: "26章",
+        chapter: "25章",
         classId: "bishop",
         className: "司祭",
         difficulty: "eliwood_normal",
@@ -362,7 +351,7 @@ const BOSSES = [
     {
         id: "jerme_en",
         name: "ジェルメ",
-        chapter: "26章",
+        chapter: "25章",
         classId: "assassin",
         className: "アサシン",
         difficulty: "eliwood_normal",
@@ -373,7 +362,7 @@ const BOSSES = [
     {
         id: "ursula_en",
         name: "ウルスラ",
-        chapter: "27章",
+        chapter: "26章",
         classId: "valkyrie",
         className: "ヴァルキュリア",
         difficulty: "eliwood_normal",
@@ -384,7 +373,7 @@ const BOSSES = [
     {
         id: "maxime_en",
         name: "マクシム",
-        chapter: "27章",
+        chapter: "26章",
         classId: "paladin",
         className: "パラディン",
         difficulty: "eliwood_normal",
@@ -395,7 +384,7 @@ const BOSSES = [
     {
         id: "sonia_en",
         name: "ソーニャ",
-        chapter: "27章外伝",
+        chapter: "26章外伝",
         classId: "sage",
         className: "賢者",
         difficulty: "eliwood_normal",
@@ -406,29 +395,29 @@ const BOSSES = [
     {
         id: "lloyd2_en",
         name: "ロイド",
-        chapter: "28章",
+        chapter: "27章",
         classId: "swordmaster",
         className: "ソードマスター",
         difficulty: "eliwood_normal",
         stats: { hp: 52, str: 21, skl: 25, spd: 24, lck: 16, def: 16, res: 20, con: 9 },
         weapon: { id: "rune_sword", name: "ルーンソード", type: "sword", might: 12, weight: 11, hit: 65, crit: 0 },
-        description: "モルフと化したロイド。"
+        description: "家族を失ったロイド。"
     },
     {
         id: "linus2_en",
         name: "ライナス",
-        chapter: "28章",
+        chapter: "27章",
         classId: "hero",
         className: "勇者",
         difficulty: "eliwood_normal",
         stats: { hp: 58, str: 25, skl: 22, spd: 18, lck: 14, def: 20, res: 16, con: 14 },
         weapon: { id: "rune_sword", name: "ルーンソード", type: "sword", might: 12, weight: 11, hit: 65, crit: 0 },
-        description: "モルフと化したライナス。"
+        description: "家族を失ったライナス。"
     },
     {
         id: "georg_en",
         name: "ゲオルグ",
-        chapter: "29章",
+        chapter: "28章",
         classId: "berserker",
         className: "狂戦士",
         difficulty: "eliwood_normal",
@@ -436,6 +425,17 @@ const BOSSES = [
         weapon: { id: "tomahawk", name: "トマホーク", type: "axe", might: 13, weight: 14, hit: 65, crit: 0 },
         description: "モルフの戦士。"
     },
+    {
+        id: "denning",
+        name: "デニング",
+        chapter: "29章",
+        classId: "sniper",
+        className: "スナイパー",
+        difficulty: "eliwood_normal",
+        stats: { hp: 51, str: 19, skl: 20, spd: 21, lck: 0, def: 15, res: 23, con: 8 },
+        weapon: { id: "silver_bow", name: "ぎんの弓", type: "bow", might: 10, weight: 12, hit: 70, crit: 0 },
+        description: "モルフ。「ネルガルのもとへ参れ」としか話さない。"
+    },    
     {
         id: "limstella_en",
         name: "リムステラ",
@@ -659,6 +659,17 @@ const BOSSES = [
         stats: { hp: 52, str: 25, skl: 23, spd: 18, lck: 15, def: 18, res: 15, con: 15 },
         weapon: { id: "brave_axe", name: "ゆうしゃの斧", type: "axe", might: 10, weight: 16, hit: 65, crit: 0 },
         description: "四牙のひとり。「狂犬」の異名を持つ。"
+    },
+    {
+        id: "pascal",
+        name: "パスカル",
+        chapter: "25章",
+        classId: "paladin",
+        className: "パラディン",
+        difficulty: "eliwood_normal",
+        stats: { hp: 40, str: 15, skl: 14, spd: 13, lck: 9, def: 13, res: 11, con: 12 },
+        weapon: { id: "silver_lance", name: "ぎんのやり", type: "lance", might: 14, weight: 10, hit: 75, crit: 0 },
+        description: "ベルンの貴族。ソーニャに加担する。"
     },
     {
         id: "vaida_hh",
