@@ -317,6 +317,18 @@ function isEffective(weapon, targetClassId) {
                 // モンスター系（烈火では火竜のみ）
                 if (targetClassId === 'firedragon') return true;
                 break;
+            default:
+                // クラスID直接指定の場合（ソードキラーなど）
+                // 上級職などのマッピングが必要な場合はここで吸収するか、
+                // weapons.js側で全ての対象クラスIDを列挙する
+                if (effectType === targetClassId) return true;
+                
+                // ロード(リン)の上級職判定などの例外処理
+                if (effectType === 'blade_lord' && targetClassId === 'lord_lyn' && /* 上級職フラグがあれば */ false) {
+                    // ※現状のデータ構造だとクラスIDが変わる実装になっているはずなので
+                    // targetClassIdが直接一致するかどうかで十分
+                }
+                break;
         }
     }
     
@@ -346,7 +358,7 @@ function calculateBattleStats(unit, weapon, target, classId) {
     const attackSpeed = stats.spd - weightPenalty;
     
     // 武器相性
-    const triangleBonus = getWeaponTriangleBonus(weapon.type, targetWeapon.type);
+    const triangleBonus = getWeaponTriangleBonus(weapon, targetWeapon);
     
     // 特効判定（威力3倍、ただし竜特効は2倍、アーリアルは対竜でも3倍）
     const hasEffective = isEffective(weapon, targetClassId);
@@ -421,22 +433,67 @@ function calculateBattleStats(unit, weapon, target, classId) {
 
 /**
  * 武器相性ボーナスを取得
+ * @param {Object} attackerWeapon - 攻撃側の武器データ
+ * @param {Object} defenderWeapon - 防御側の武器データ
  */
-function getWeaponTriangleBonus(attackerType, defenderType) {
+function getWeaponTriangleBonus(attackerWeapon, defenderWeapon) {
     const result = { hit: 0, might: 0, advantage: null };
+    
+    if (!attackerWeapon || !defenderWeapon) return result;
+    
+    const attackerType = attackerWeapon.type;
+    const defenderType = defenderWeapon.type;
     
     if (!attackerType || !defenderType) return result;
     
     const triangle = WEAPON_TRIANGLE[attackerType];
     if (!triangle) return result;
     
+    // バスター系（相性逆転武器）かどうか
+    const isAttackerReaver = !!attackerWeapon.reaver;
+    const isDefenderReaver = !!defenderWeapon.reaver;
+    
+    // 基本補正値（通常は命中15, 威力1）
+    let hitBonus = 15;
+    let mightBonus = 1;
+    
+    // どちらか片方だけがバスター系の場合、補正値は2倍になる
+    if (isAttackerReaver !== isDefenderReaver) {
+        hitBonus *= 2; // 30
+        mightBonus *= 2; // 2
+    }
+    
+    let isAdvantage = false;
+    let isDisadvantage = false;
+    
     if (triangle.strong === defenderType) {
-        result.hit = 15;
-        result.might = 1;
-        result.advantage = 'advantage';
+        // 通常は有利
+        isAdvantage = true;
     } else if (triangle.weak === defenderType) {
-        result.hit = -15;
-        result.might = -1;
+        // 通常は不利
+        isDisadvantage = true;
+    }
+    
+    // バスター系の処理（相性逆転）
+    // 片方だけがバスター系の場合、有利不利が逆転する
+    if (isAttackerReaver !== isDefenderReaver) {
+        if (isAdvantage) {
+            isAdvantage = false;
+            isDisadvantage = true;
+        } else if (isDisadvantage) {
+            isDisadvantage = false;
+            isAdvantage = true;
+        }
+    }
+    
+    // 最終的な判定
+    if (isAdvantage) {
+        result.hit = hitBonus;
+        result.might = mightBonus;
+        result.advantage = 'advantage';
+    } else if (isDisadvantage) {
+        result.hit = -hitBonus;
+        result.might = -mightBonus;
         result.advantage = 'disadvantage';
     }
     
